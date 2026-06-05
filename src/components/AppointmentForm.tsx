@@ -42,7 +42,7 @@ export function AppointmentForm({ onAdd }: Props) {
   }
 
   return (
-    <Card className="p-6">
+    <div className="form-card">
       <h2 className="text-xl font-semibold text-slate-900">Create Appointment</h2>
       <p className="mt-1 text-sm text-slate-500">Add a new patient appointment to the tracker</p>
 
