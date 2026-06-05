@@ -102,7 +102,5 @@ export function AppointmentForm({ onAdd }: Props) {
             Save Appointment
           </Button>
         </div>
-      </form>
-    </Card>
   )
-}
+
