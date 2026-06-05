@@ -59,28 +59,49 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen px-4 py-6 md:px-8 lg:px-12">
-      <div className="mx-auto max-w-7xl">
-        <Header />
+  <div className="dashboard-container">
 
-        {useMockData ? (
-          <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            Backend not reachable. Showing mock data until the Java API is connected.
-          </div>
-        ) : null}
+    <div className="hero-header">
+      <h1>🏥 Health & Appointment Tracker</h1>
+      <p>
+        Manage patients, appointments, health records and schedules.
+      </p>
+    </div>
 
-        {loading ? (
-          <div className="rounded-2xl bg-white p-8 text-center shadow-soft">
-            Loading appointments...
-          </div>
-        ) : (
-          <div className="space-y-6">
-            <StatsCards appointments={appointments} />
-            <AppointmentForm onAdd={handleAdd} />
-            <AppointmentList appointments={appointments} onDelete={handleDelete} />
-          </div>
-        )}
+    <div className="stats-grid">
+      <div className="stat-card">
+        <div className="stat-number">{appointments.length}</div>
+        <div className="stat-title">Total Appointments</div>
+      </div>
+
+      <div className="stat-card">
+        <div className="stat-number">
+          {appointments.filter(a => a.status === "Scheduled").length}
+        </div>
+        <div className="stat-title">Scheduled</div>
+      </div>
+
+      <div className="stat-card">
+        <div className="stat-number">
+          {appointments.filter(a => a.status === "Completed").length}
+        </div>
+        <div className="stat-title">Completed</div>
+      </div>
+
+      <div className="stat-card">
+        <div className="stat-number">
+          {appointments.filter(a => a.status === "Cancelled").length}
+        </div>
+        <div className="stat-title">Cancelled</div>
       </div>
     </div>
-  )
-}
+
+    <AppointmentForm onAdd={handleAdd} />
+
+    <AppointmentList
+      appointments={appointments}
+      onDelete={handleDelete}
+    />
+
+  </div>
+)
