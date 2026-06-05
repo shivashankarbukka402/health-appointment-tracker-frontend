@@ -1,116 +1,195 @@
-import { Search, Trash2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Appointment } from '../types/appointment'
-import { Card } from './ui/Card'
-import { Button } from './ui/Button'
-import { Input } from './ui/Input'
 
 type Props = {
   appointments: Appointment[]
   onDelete: (id: string) => void
 }
 
-export function AppointmentList({ appointments, onDelete }: Props) {
+export function AppointmentList({
+  appointments,
+  onDelete
+}: Props) {
   const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState<'All' | Appointment['status']>('All')
+
+  const [filter, setFilter] = useState<
+    'All' | Appointment['status']
+  >('All')
 
   const filtered = useMemo(() => {
     return appointments.filter((a) => {
       const matchesSearch =
-        a.patientName.toLowerCase().includes(search.toLowerCase()) ||
-        a.doctorName.toLowerCase().includes(search.toLowerCase()) ||
-        a.department.toLowerCase().includes(search.toLowerCase())
+        a.patientName
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        a.doctorName
+          .toLowerCase()
+          .includes(search.toLowerCase()) ||
+        a.department
+          .toLowerCase()
+          .includes(search.toLowerCase())
 
-      const matchesFilter = filter === 'All' ? true : a.status === filter
+      const matchesFilter =
+        filter === 'All'
+          ? true
+          : a.status === filter
 
       return matchesSearch && matchesFilter
     })
   }, [appointments, search, filter])
 
   return (
-    <Card className="p-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <h2 className="text-xl font-semibold text-slate-900">Appointments</h2>
-          <p className="text-sm text-slate-500">Search, filter, and manage all appointments</p>
-        </div>
+    <div className="form-card">
 
-        <div className="flex flex-col gap-3 md:flex-row">
-          <div className="relative">
-            <Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-slate-400" />
-            <Input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search appointments"
-              className="pl-10"
-            />
-          </div>
+      <h2 className="form-title">
+        Appointments
+      </h2>
 
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value as any)}
-            className="rounded-xl border border-slate-300 px-4 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-          >
-            <option value="All">All</option>
-            <option value="Scheduled">Scheduled</option>
-            <option value="Completed">Completed</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
-        </div>
-      </div>
+      <p style={{ marginBottom: '20px' }}>
+        Search, filter, and manage all appointments
+      </p>
 
-      <div className="mt-6 space-y-4">
+      <input
+        type="text"
+        placeholder="Search appointments..."
+        value={search}
+        onChange={(e) =>
+          setSearch(e.target.value)
+        }
+        className="search-box"
+      />
+
+      <select
+        value={filter}
+        onChange={(e) =>
+          setFilter(e.target.value as any)
+        }
+        style={{
+          padding: '12px',
+          borderRadius: '12px',
+          marginBottom: '20px',
+          width: '100%'
+        }}
+      >
+        <option value="All">
+          All Appointments
+        </option>
+
+        <option value="Scheduled">
+          Scheduled
+        </option>
+
+        <option value="Completed">
+          Completed
+        </option>
+
+        <option value="Cancelled">
+          Cancelled
+        </option>
+      </select>
+
+      <div className="appointments-grid">
+
         {filtered.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-slate-300 p-10 text-center text-slate-500">
+          <div
+            style={{
+              textAlign: 'center',
+              padding: '40px'
+            }}
+          >
             No appointments found.
           </div>
         ) : (
           filtered.map((appointment) => (
             <div
               key={appointment.id}
-              className="rounded-2xl border border-slate-200 bg-slate-50 p-5"
+              className="appointment-card"
             >
-              <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '15px'
+                }}
+              >
+
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-900">{appointment.patientName}</h3>
-                  <p className="text-sm text-slate-600">
-                    Dr. {appointment.doctorName} • {appointment.department}
+
+                  <h3 className="patient-name">
+                    {appointment.patientName}
+                  </h3>
+
+                  <p className="doctor-name">
+                    Dr. {appointment.doctorName}
                   </p>
-                  <p className="mt-1 text-sm text-slate-500">
-                    {appointment.date} at {appointment.time}
+
+                  <p>
+                    {appointment.department}
                   </p>
-                  {appointment.notes ? (
-                    <p className="mt-2 text-sm text-slate-600">{appointment.notes}</p>
-                  ) : null}
+
+                  <p>
+                    📅 {appointment.date}
+                  </p>
+
+                  <p>
+                    ⏰ {appointment.time}
+                  </p>
+
+                  {appointment.notes && (
+                    <p
+                      style={{
+                        marginTop: '10px'
+                      }}
+                    >
+                      {appointment.notes}
+                    </p>
+                  )}
+
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div>
+
                   <span
-                    className={`rounded-full px-3 py-1 text-sm font-medium ${
-                      appointment.status === 'Scheduled'
-                        ? 'bg-blue-100 text-blue-700'
-                        : appointment.status === 'Completed'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-700'
+                    className={`badge ${
+                      appointment.status ===
+                      'Scheduled'
+                        ? 'badge-scheduled'
+                        : appointment.status ===
+                          'Completed'
+                        ? 'badge-completed'
+                        : 'badge-cancelled'
                     }`}
                   >
                     {appointment.status}
                   </span>
 
-                  <Button
-                    variant="danger"
-                    onClick={() => onDelete(appointment.id)}
-                    className="flex items-center gap-2"
+                  <br />
+                  <br />
+
+                  <button
+                    className="danger-btn"
+                    onClick={() =>
+                      onDelete(
+                        appointment.id
+                      )
+                    }
                   >
-                    <Trash2 className="h-4 w-4" />
                     Delete
-                  </Button>
+                  </button>
+
                 </div>
+
               </div>
+
             </div>
           ))
         )}
+
       </div>
-    </Card>
+
+    </div>
   )
 }
