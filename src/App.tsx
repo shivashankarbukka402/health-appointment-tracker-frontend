@@ -68,40 +68,71 @@ export default function App() {
       </p>
     </div>
 
-    <div className="stats-grid">
-      <div className="stat-card">
-        <div className="stat-number">{appointments.length}</div>
-        <div className="stat-title">Total Appointments</div>
+    {loading ? (
+      <div style={{ textAlign: 'center', padding: '40px' }}>
+        Loading appointments...
       </div>
+    ) : (
+      <>
+        <div className="stats-grid">
+          <div className="stat-card">
+            <div className="stat-number">
+              {appointments.length}
+            </div>
+            <div className="stat-title">
+              Total Appointments
+            </div>
+          </div>
 
-      <div className="stat-card">
-        <div className="stat-number">
-          {appointments.filter(a => a.status === "Scheduled").length}
+          <div className="stat-card">
+            <div className="stat-number">
+              {
+                appointments.filter(
+                  a => a.status === 'Scheduled'
+                ).length
+              }
+            </div>
+            <div className="stat-title">
+              Scheduled
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-number">
+              {
+                appointments.filter(
+                  a => a.status === 'Completed'
+                ).length
+              }
+            </div>
+            <div className="stat-title">
+              Completed
+            </div>
+          </div>
+
+          <div className="stat-card">
+            <div className="stat-number">
+              {
+                appointments.filter(
+                  a => a.status === 'Cancelled'
+                ).length
+              }
+            </div>
+            <div className="stat-title">
+              Cancelled
+            </div>
+          </div>
         </div>
-        <div className="stat-title">Scheduled</div>
-      </div>
 
-      <div className="stat-card">
-        <div className="stat-number">
-          {appointments.filter(a => a.status === "Completed").length}
-        </div>
-        <div className="stat-title">Completed</div>
-      </div>
+        <AppointmentForm onAdd={handleAdd} />
 
-      <div className="stat-card">
-        <div className="stat-number">
-          {appointments.filter(a => a.status === "Cancelled").length}
-        </div>
-        <div className="stat-title">Cancelled</div>
-      </div>
-    </div>
-
-    <AppointmentForm onAdd={handleAdd} />
-
-    <AppointmentList
-      appointments={appointments}
-      onDelete={handleDelete}
-    />
+        <AppointmentList
+          appointments={appointments}
+          onDelete={handleDelete}
+        />
+      </>
+    )}
 
   </div>
 )
+}
